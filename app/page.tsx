@@ -66,9 +66,9 @@ export default function WritePage() {
       <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
         <label className={LABEL}>폴더 위치</label>
         <div className="flex gap-2">
-          <input type="text" placeholder="예: 미분" value={folder}
+          <input type="text" placeholder="예: 함수" value={folder}
             onChange={e => setFolder(e.target.value)} className={INPUT} />
-          <input type="text" placeholder="세부 단원 (선택)" value={subFolder}
+          <input type="text" placeholder="세부 단원(선택)" value={subFolder}
             onChange={e => setSubFolder(e.target.value)} className={INPUT} />
         </div>
       </section>
@@ -78,12 +78,12 @@ export default function WritePage() {
         <label className={LABEL}>문제 내용</label>
         <div className="space-y-3">
           <label className="flex items-center gap-3 h-11 px-4 bg-[#fafafa] border border-[#e4e4e4] rounded-xl cursor-pointer active:scale-[0.98] transition-transform">
-            <span className="text-sm font-medium text-gray-500">📷 사진 찍기 / 첨부</span>
+            <span className="text-sm font-medium text-gray-500">사진/파일 첨부</span>
             {problemImage && <span className="text-sm text-gray-700 truncate flex-1 text-right">{problemImage.name}</span>}
             <input type="file" accept="image/*" className="hidden"
               onChange={e => setProblemImage(e.target.files?.[0] ?? null)} />
           </label>
-          <textarea placeholder="문제의 핵심 텍스트를 적어보세요." value={problemText}
+          <textarea placeholder="텍스트 작성" value={problemText}
             onChange={e => setProblemText(e.target.value)} rows={4}
             className="w-full px-4 py-3 text-[15px] bg-[#fafafa] border border-[#e4e4e4] rounded-xl outline-none focus:border-gray-400 transition-colors resize-none placeholder:text-gray-300 leading-relaxed" />
         </div>
@@ -94,12 +94,12 @@ export default function WritePage() {
 
       {/* 4. 풀이 흐름 섹션 */}
       <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <label className={LABEL}>풀이 흐름 (Thinking Process)</label>
+        <label className={LABEL}>풀이 과정</label>
         <div className="space-y-3">
           {steps.map((step, i) => (
             <div key={i} className="flex items-center gap-3">
               <span className="text-xs font-bold text-gray-300 w-4 text-right shrink-0">{i + 1}</span>
-              <input type="text" placeholder={`${i + 1}단계 아이디어`} value={step}
+              <input type="text" placeholder={`${i + 1}단계`} value={step}
                 onChange={e => { const s = [...steps]; s[i] = e.target.value; setSteps(s) }}
                 className={INPUT} />
             </div>
@@ -115,7 +115,7 @@ export default function WritePage() {
           disabled={saving}
           className="w-full h-12 text-[15px] font-bold bg-gray-900 text-white rounded-xl active:scale-[0.96] transition-all disabled:opacity-40 shadow-lg shadow-gray-200"
         >
-          {saving ? '노트 저장 중...' : '오늘의 오답 저장하기'}
+          {saving ? '노트 저장 중...' : '저장하기'}
         </button>
       </div>
 
