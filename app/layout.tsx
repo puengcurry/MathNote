@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import AuthProvider from "@/components/AuthProvider"; // ★ 새로 만든 거 임포트
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next"
 
 const geist = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
             </main>
           </div>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
