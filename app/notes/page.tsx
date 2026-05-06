@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { uploadImage, type Note } from '@/lib/notes'
 import TagEditor from '@/components/TagEditor'
 
-const INPUT = 'flex-1 min-w-0 h-10 px-3.5 text-sm bg-[#fafafa] border border-[#e4e4e4] rounded-lg outline-none focus:border-gray-400 transition-colors placeholder:text-gray-300'
+const INPUT = 'flex-1 h-10 px-3.5 text-sm bg-[#fafafa] border border-[#e4e4e4] rounded-lg outline-none focus:border-gray-400 transition-colors placeholder:text-gray-300'
 const SUBLABEL = 'text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-2.5'
 
 function NoteCard({ note, onDelete }: { note: Note; onDelete: (id: string) => void }) {
@@ -120,14 +120,13 @@ function NoteCard({ note, onDelete }: { note: Note; onDelete: (id: string) => vo
   return (
     <div className="bg-white border border-[#e4e4e4] rounded-xl p-5 mb-3">
       <div className="flex items-center justify-between mb-4">
-        {/* ★ 폴더 영역 말줄임표 처리 */}
-        <div className="flex items-center gap-1.5 flex-1 min-w-0 pr-3">
-          <span className="text-xs font-medium text-gray-700 bg-gray-100 px-2.5 py-1 rounded-md shrink-0">{note.folder}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-medium text-gray-700 bg-gray-100 px-2.5 py-1 rounded-md">{note.folder}</span>
           {note.sub_folder && (
-            <span className="text-xs text-gray-400 bg-gray-50 border border-[#e4e4e4] px-2.5 py-1 rounded-md truncate max-w-[120px]">{note.sub_folder}</span>
+            <span className="text-xs text-gray-400 bg-gray-50 border border-[#e4e4e4] px-2.5 py-1 rounded-md">{note.sub_folder}</span>
           )}
         </div>
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-3">
           <span className="text-xs text-gray-300 tabular-nums">
             {new Date(note.created_at).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })}
           </span>
@@ -168,16 +167,17 @@ function NoteCard({ note, onDelete }: { note: Note; onDelete: (id: string) => vo
   )
 }
 
-function FolderBox({ label, count, selected, onClick }: {
-  label: string; count: number; selected: boolean; onClick: () => void;
+function FolderBox({ label, count, selected, onClick, small = false }: {
+  label: string; count: number; selected: boolean; onClick: () => void; small?: boolean
 }) {
   return (
-    <button onClick={onClick} className="flex flex-col items-center shrink-0 gap-1.5 active:scale-[0.97] transition">
-      <div className={`flex items-center justify-center font-semibold rounded-xl transition-colors w-14 h-14 text-lg
+    <button onClick={onClick} className={`flex flex-col items-center shrink-0 ${small ? 'gap-1' : 'gap-1.5'}`}>
+      <div className={`flex items-center justify-center font-semibold rounded-xl transition-colors
+        ${small ? 'w-10 h-10 text-sm' : 'w-14 h-14 text-lg'}
         ${selected ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 border border-[#e4e4e4] hover:border-gray-400'}`}>
         {count}
       </div>
-      <span className={`font-medium text-center truncate text-[11px] w-16
+      <span className={`font-medium text-center truncate ${small ? 'text-[10px] w-12' : 'text-[11px] w-16'}
         ${selected ? 'text-gray-900' : 'text-gray-400'}`} title={label}>
         {label}
       </span>
@@ -191,28 +191,9 @@ export default function NotesPage() {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null)
   const [selectedSubFolder, setSelectedSubFolder] = useState<string | null>(null)
 
-  // ★ 에러 핸들링이 추가된 useEffect
   useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('notes')
-          .select('*')
-          .order('created_at', { ascending: false })
-        
-        if (error) {
-          alert('데이터를 불러오지 못했습니다: ' + error.message)
-        } else if (data) {
-          setNotes(data)
-        }
-      } catch (err: any) {
-        alert('네트워크 에러: ' + err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-    
-    fetchNotes()
+    supabase.from('notes').select('*').order('created_at', { ascending: false })
+      .then(({ data }) => { if (data) setNotes(data); setLoading(false) })
   }, [])
 
   const folderStats = notes.reduce((acc, n) => {
@@ -233,59 +214,40 @@ export default function NotesPage() {
   const selectMain = (f: string | null) => { setSelectedFolder(f); setSelectedSubFolder(null) }
 
   return (
-    <div className="min-h-[calc(100dvh-5rem)] bg-[#fafafa]"> {/* 헤더 높이만큼 뺌 */}
-      <div className="max-w-xl mx-auto px-6 py-8 pb-24"> {/* 하단 여백 확보 */}
+    <div className="min-h-screen bg-[#fafafa]">
+      <div className="max-w-xl mx-auto px-6 py-10">
         {!loading && notes.length > 0 && (
           <div className="mb-8">
             <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-4">전체 {notes.length}문제</p>
-            
-            {/* 1층: 메인 폴더 스크롤 */}
-            <div className="flex gap-3 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+            <div className="flex gap-3 overflow-x-auto pb-1">
               <FolderBox label="전체" count={notes.length} selected={!selectedFolder} onClick={() => selectMain(null)} />
               {Object.entries(folderStats).map(([name, count]) => (
-                <FolderBox key={name} label={name} count={count}
-                  selected={selectedFolder === name}
-                  onClick={() => selectMain(name)} />
+                <div key={name} className="flex items-start gap-2 shrink-0">
+                  <FolderBox label={name} count={count}
+                    selected={selectedFolder === name && !selectedSubFolder}
+                    onClick={() => selectMain(name)} />
+                  {selectedFolder === name && Object.keys(subFolderStats).length > 0 && (
+                    <div className="flex gap-2 pt-2">
+                      {Object.entries(subFolderStats).map(([sub, sc]) => (
+                        <FolderBox key={sub} label={sub} count={sc} small
+                          selected={selectedSubFolder === sub}
+                          onClick={() => setSelectedSubFolder(selectedSubFolder === sub ? null : sub)} />
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
-
-            {/* 2층: 세부 폴더 랩핑 영역 */}
-            {selectedFolder && Object.keys(subFolderStats).length > 0 && (
-              <div className="mt-3 p-3 bg-white border border-[#e4e4e4] rounded-xl flex flex-wrap gap-2">
-                <button
-                  onClick={() => setSelectedSubFolder(null)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                    !selectedSubFolder ? 'bg-gray-800 text-white' : 'bg-[#fafafa] text-gray-500 border border-[#e4e4e4] hover:border-gray-400'
-                  }`}
-                >
-                  전체 ({folderStats[selectedFolder]})
-                </button>
-                {Object.entries(subFolderStats).map(([sub, sc]) => (
-                  <button
-                    key={sub}
-                    onClick={() => setSelectedSubFolder(selectedSubFolder === sub ? null : sub)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors max-w-[150px] truncate ${
-                      selectedSubFolder === sub ? 'bg-gray-800 text-white' : 'bg-[#fafafa] text-gray-500 border border-[#e4e4e4] hover:border-gray-400'
-                    }`}
-                  >
-                    {sub} <span className="opacity-60 ml-0.5 font-normal">{sc}</span>
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         )}
-        
         {loading ? (
-          <p className="text-sm text-gray-400 text-center py-24">불러오는 중...</p>
+          <p className="text-sm text-gray-300 text-center py-24">불러오는 중...</p>
         ) : filteredNotes.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-24">저장된 노트가 없습니다.</p>
+          <p className="text-sm text-gray-300 text-center py-24">저장된 노트가 없습니다.</p>
         ) : (
-          <div className="space-y-3">
-            {filteredNotes.map(note => (
-              <NoteCard key={note.id} note={note} onDelete={id => setNotes(prev => prev.filter(n => n.id !== id))} />
-            ))}
-          </div>
+          filteredNotes.map(note => (
+            <NoteCard key={note.id} note={note} onDelete={id => setNotes(prev => prev.filter(n => n.id !== id))} />
+          ))
         )}
       </div>
     </div>
