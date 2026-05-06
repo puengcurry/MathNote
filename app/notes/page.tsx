@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { uploadImage, type Note } from '@/lib/notes'
 import TagEditor from '@/components/TagEditor'
 
-const INPUT = 'flex-1 h-10 px-3.5 text-sm bg-[#fafafa] border border-[#e4e4e4] rounded-lg outline-none focus:border-gray-400 transition-colors placeholder:text-gray-300'
+const INPUT = 'flex-1 min-w-0 h-11 px-4 text-[15px] bg-[#fafafa] border border-[#e4e4e4] rounded-xl outline-none focus:border-gray-400 transition-colors placeholder:text-gray-300'
 const SUBLABEL = 'text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-2.5'
 
 function NoteCard({ note, onDelete }: { note: Note; onDelete: (id: string) => void }) {
