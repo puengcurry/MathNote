@@ -5,7 +5,7 @@ import AuthProvider from "@/components/AuthProvider"; // ★ 새로 만든 거 �
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react"
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 const geist = Geist({
   variable: "--font-geist-sans",
