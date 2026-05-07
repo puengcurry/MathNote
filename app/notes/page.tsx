@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { uploadImage, type Note } from '@/lib/notes'
 import TagEditor from '@/components/TagEditor'
@@ -9,6 +10,7 @@ const INPUT = 'flex-1 min-w-0 h-11 px-4 text-[15px] bg-[#fafafa] border border-[
 const SUBLABEL = 'text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-2.5'
 
 function NoteCard({ note, onDelete }: { note: Note; onDelete: (id: string) => void }) {
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -130,10 +132,30 @@ function NoteCard({ note, onDelete }: { note: Note; onDelete: (id: string) => vo
           <span className="text-xs text-gray-300 tabular-nums">
             {new Date(note.created_at).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })}
           </span>
-          <button onClick={() => setIsEditing(true)} className="text-xs text-gray-400 hover:text-gray-700 transition-colors">수정</button>
+
+          <button
+            onClick={() => router.push(`/notes/${note.id}/practice`)}
+            className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
+          >
+            다시 풀기
+          </button>
+
+          <button
+            onClick={() => setIsEditing(true)}
+            className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
+          >
+            수정
+          </button>
         </div>
       </div>
-      {imgUrl && <img src={imgUrl} alt="" className="w-full h-auto rounded-lg border border-[#e4e4e4] mb-4" />}
+      {imgUrl && (
+        <img
+          src={imgUrl}
+          alt="수학 문제 이미지"
+          loading="lazy"
+          className="w-full h-auto rounded-lg border border-[#e4e4e4] mb-4 object-contain"
+        />
+      )}
       {note.problem_text && (
         <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap mb-4">{note.problem_text}</p>
       )}
