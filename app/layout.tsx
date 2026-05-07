@@ -4,7 +4,7 @@ import Nav from "@/components/Nav";
 import AuthProvider from "@/components/AuthProvider"; // ★ 새로 만든 거 임포트
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geist = Geist({
