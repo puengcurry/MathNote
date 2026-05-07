@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
-export default function PracticePage({ params }: { params: { id: string } }) {
+export default function PracticePage() {
   const router = useRouter()
+  const params = useParams<{ id: string }>()
   const [note, setNote] = useState<{
     id: string
     practice_count?: number
@@ -23,6 +24,11 @@ export default function PracticePage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     let isMounted = true
+
+    if (!params?.id) {
+      setLoading(false)
+      return
+    }
 
     const fetchNote = async () => {
       const { data, error } = await supabase
@@ -47,7 +53,7 @@ export default function PracticePage({ params }: { params: { id: string } }) {
     return () => {
       isMounted = false
     }
-  }, [params.id, router])
+  }, [params, router])
 
   const handleShowSolution = async () => {
     if (showSolution || !note) return
