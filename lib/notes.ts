@@ -15,7 +15,7 @@ export type Note = {
   created_at: string
 }
 
-export const PRESET_TAGS = ['개념 부족', '계산 실수', '조건 해석 오류', '풀이 못 찾음', '실수', '시간 부족']
+export const PRESET_TAGS = ['접근 못함', '계산 실수', '조건 해석', '시간 부족']
 
 export async function uploadImage(file: File): Promise<string> {
   const ext = file.name.split('.').pop()

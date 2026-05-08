@@ -219,7 +219,7 @@ export default function NotesPage() {
         {!loading && notes.length > 0 && (
           <div className="mb-8">
             <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-4">전체 {notes.length}문제</p>
-            <div className="flex gap-3 overflow-x-auto pb-1">
+            <div className="flex gap-3 overflow-x-auto pb-1 -mx-6 px-6">
               <FolderBox label="전체" count={notes.length} selected={!selectedFolder} onClick={() => selectMain(null)} />
               {Object.entries(folderStats).map(([name, count]) => (
                 <div key={name} className="flex items-start gap-2 shrink-0">
@@ -227,7 +227,7 @@ export default function NotesPage() {
                     selected={selectedFolder === name && !selectedSubFolder}
                     onClick={() => selectMain(name)} />
                   {selectedFolder === name && Object.keys(subFolderStats).length > 0 && (
-                    <div className="flex gap-2 pt-2">
+                    <div className="flex gap-2 pt-2 shrink-0">
                       {Object.entries(subFolderStats).map(([sub, sc]) => (
                         <FolderBox key={sub} label={sub} count={sc} small
                           selected={selectedSubFolder === sub}
@@ -237,6 +237,7 @@ export default function NotesPage() {
                   )}
                 </div>
               ))}
+              <div className="w-6 shrink-0" />
             </div>
           </div>
         )}
