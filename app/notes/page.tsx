@@ -59,7 +59,7 @@ function NoteCard({ note, onDelete }: { note: Note; onDelete: (id: string) => vo
         <div className="space-y-5">
           <div>
             <p className={SUBLABEL}>폴더</p>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2 w-full">
               <input type="text" value={folder} onChange={e => setFolder(e.target.value)} className={INPUT} />
               <input type="text" value={subFolder} placeholder="세부 폴더 (선택)"
                 onChange={e => setSubFolder(e.target.value)} className={INPUT} />
