@@ -219,26 +219,29 @@ export default function NotesPage() {
         {!loading && notes.length > 0 && (
           <div className="mb-8">
             <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-4">전체 {notes.length}문제</p>
+
+            {/* 메인 폴더 행 */}
             <div className="flex gap-3 overflow-x-auto pb-1 -mx-6 px-6">
               <FolderBox label="전체" count={notes.length} selected={!selectedFolder} onClick={() => selectMain(null)} />
               {Object.entries(folderStats).map(([name, count]) => (
-                <div key={name} className="flex items-start gap-2 shrink-0">
-                  <FolderBox label={name} count={count}
-                    selected={selectedFolder === name && !selectedSubFolder}
-                    onClick={() => selectMain(name)} />
-                  {selectedFolder === name && Object.keys(subFolderStats).length > 0 && (
-                    <div className="flex gap-2 pt-2 shrink-0">
-                      {Object.entries(subFolderStats).map(([sub, sc]) => (
-                        <FolderBox key={sub} label={sub} count={sc} small
-                          selected={selectedSubFolder === sub}
-                          onClick={() => setSelectedSubFolder(selectedSubFolder === sub ? null : sub)} />
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <FolderBox key={name} label={name} count={count}
+                  selected={selectedFolder === name && !selectedSubFolder}
+                  onClick={() => selectMain(name)} />
               ))}
               <div className="w-6 shrink-0" />
             </div>
+
+            {/* 세부 폴더 행 — 선택된 메인 폴더 아래에 별도 행으로 표시 */}
+            {selectedFolder && Object.keys(subFolderStats).length > 0 && (
+              <div className="flex gap-2 overflow-x-auto pb-1 mt-3 -mx-6 px-6">
+                {Object.entries(subFolderStats).map(([sub, sc]) => (
+                  <FolderBox key={sub} label={sub} count={sc} small
+                    selected={selectedSubFolder === sub}
+                    onClick={() => setSelectedSubFolder(selectedSubFolder === sub ? null : sub)} />
+                ))}
+                <div className="w-6 shrink-0" />
+              </div>
+            )}
           </div>
         )}
         {loading ? (
