@@ -13,7 +13,7 @@ export default function Nav() {
   const pathname = usePathname()
 
   return (
-    <nav className="sticky top-0 z-10 bg-white border-b border-gray-100">
+    <nav className="sticky top-0 z-10 bg-white border-b border-[#e4e4e4]">
       <div className="max-w-xl mx-auto px-6 h-12 flex items-center justify-between">
         <span className="text-sm font-semibold text-gray-900 tracking-tight">오답 노트</span>
         <div className="flex items-center gap-1">
