@@ -51,7 +51,7 @@ export default function WritePage() {
 
         <section>
           <p className={LABEL}>폴더</p>
-          <div className="flex gap-3">
+          <div className="grid grid-cols-2 gap-2 w-full">
             <input type="text" placeholder="예: 함수" value={folder}
               onChange={e => setFolder(e.target.value)} className={INPUT} />
             <input type="text" placeholder="세부 폴더 (선택)" value={subFolder}
